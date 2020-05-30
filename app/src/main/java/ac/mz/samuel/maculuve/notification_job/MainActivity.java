@@ -16,21 +16,19 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
     private NotificationManagerCompat notificationManager;
-    private EditText editTextTitle;
-    private EditText editTextMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         notificationManager = NotificationManagerCompat.from(this);
-        editTextTitle = findViewById(R.id.edit_text_title);
-        editTextMessage = findViewById(R.id.edit_text_message);
+        sendOnChannel1();
+        sendOnChannel2();
     }
 
-    public void sendOnChannel1(View v) {
-        String title = editTextTitle.getText().toString();
-        String message = editTextMessage.getText().toString();
+    public void sendOnChannel1() {
+        String title = "Amo Yonisse";
+        String message ="Ela vai amar-me um dia";
 
         Intent activityIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this,
@@ -41,46 +39,42 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent actionIntent = PendingIntent.getBroadcast(this,
                 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_insert_emoticon_black_24dp);
-
+        Bitmap picture = BitmapFactory.decodeResource(getResources(), R.drawable.download);
         Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_looks_two_black_24dp)
                 .setContentTitle(title)
                 .setContentText(message)
+                .setLargeIcon(picture)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(picture)
+                        .bigLargeIcon(null))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(getString(R.string.long_dummy_text))
-                        .setBigContentTitle("Big Content Title")
-                        .setSummaryText("Summary Text"))
-                .setColor(Color.BLUE)
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
-                .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
                 .build();
         notificationManager.notify(1, notification);
     }
 
-    public void sendOnChannel2(View v) {
-        String title = editTextTitle.getText().toString();
-        String message = editTextMessage.getText().toString();
+    public void sendOnChannel2() {
+        Bitmap artwork = BitmapFactory.decodeResource(getResources(), R.drawable.download);
+
+
         Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_looks_two_black_24dp)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setStyle(new NotificationCompat.InboxStyle()
-                        .addLine("This is line 1")
-                        .addLine("This is line 2")
-                        .addLine("This is line 3")
-                        .addLine("This is line 4")
-                        .addLine("This is line 5")
-                        .addLine("This is line 6")
-                        .addLine("This is line 7")
-                        .setBigContentTitle("Big Content Title")
-                        .setSummaryText("Summary Text"))
+                .setLargeIcon(artwork)
+                .addAction(R.drawable.ic_sentiment_dissatisfied_black_24dp, "Dislike", null)
+                .addAction(R.drawable.ic_skip_previous_black_24dp, "Previous", null)
+                .addAction(R.drawable.ic_history_black_24dp, "Pause", null)
+                .addAction(R.drawable.ic_skip_next_black_24dp, "Next", null)
+                .addAction(R.drawable.ic_done_all_black_24dp, "Like", null)
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(1, 2, 3))
+                .setSubText("Sub Text")
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
+
         notificationManager.notify(2, notification);
     }
 }
